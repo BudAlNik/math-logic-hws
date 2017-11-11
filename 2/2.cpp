@@ -553,13 +553,17 @@ int print_line(string expr) {
 }
 
 int act1(string expr) {
+    //output.puba("act1");
+    expr = "(" + expr + ")";
     print_line(expr);
-    print_line(expr + " -> (" + last_s + " -> " + expr + ")");
-    print_line(last_s + " -> " + expr);
+    print_line(expr + " -> ((" + last_s + ") -> " + expr + ")");
+    print_line("(" + last_s + ") -> " + expr);
     return 0;
 }
 
 int act2(string expr) {
+    //output.puba("act2");
+    expr = "(" + expr + ")";
     print_line(expr + " -> (" + expr + " -> " + expr + ")");
     print_line("(" + expr + " -> (" + expr + " -> " + expr + ")) -> (" + expr + " -> ((" + expr + " -> " + expr + ") -> " + expr + ")) -> (" + expr + " -> " + expr + ")");
     print_line("(" + expr + " -> ((" + expr + " -> " + expr + ") -> " + expr + ")) -> (" + expr + " -> " + expr + ")");
@@ -569,9 +573,11 @@ int act2(string expr) {
 }
 
 int act3(string expr, pii p) {
-    print_line("(" + last_s + " -> " + lines[p.ff] + ") -> (" + last_s + " -> (" + lines[p.ff] + " -> " + expr + ")) -> (" + last_s + " -> " + expr + ")");
-    print_line("(" + last_s + " -> (" + lines[p.ff] + " -> " + expr + ")) -> (" + last_s + " -> " + expr + ")");
-    print_line(last_s + " -> " + expr);
+    //output.puba("act3");
+    expr = "(" + expr + ")";
+    print_line("((" + last_s + ") -> (" + lines[p.ff] + ")) -> ((" + last_s + ") -> ((" + lines[p.ff] + ") -> " + expr + ")) -> ((" + last_s + ") -> " + expr + ")");
+    print_line("((" + last_s + ") -> ((" + lines[p.ff] + ") -> " + expr + ")) -> ((" + last_s + ") -> " + expr + ")");
+    print_line("(" + last_s + ") -> " + expr);
     return 0;
 }
 
@@ -711,10 +717,13 @@ int main() {
                             if (last->free_vars.count(cur->right->left->h)) {
                                 fail("переменная " + cur->right->left->name + " входит свободно в формулу " + last_s);
                             }
-                            string a = last_s, b = cur->left->get_s(), c = cur->right->right->get_s();
+                            string a = "(" + last_s + ")", b = cur->left->get_s(), c = cur->right->right->get_s();
+                            //output.puba("here1");
                             print_lemma(0, a, b, c);
+                            //output.puba("(" + a + " & " + b + ") -> " + c);
                             c = cur->right->get_s();
                             output.puba("(" + a + " & " + b + ") -> " + c);
+                            
                             print_lemma(1, a, b, c);
                             flag = true;
                         }
@@ -728,12 +737,14 @@ int main() {
                             if (last->free_vars.count(cur->right->left->h)) {
                                 fail("переменная " + cur->right->left->name + " входит свободно в формулу " + last->get_s());
                             }
-                            string a = last_s, b = cur->left->right->get_s(), c = cur->right->get_s();
+                            string a = "(" + last_s + ")", b = cur->left->right->get_s(), c = cur->right->get_s();
+                            //output.puba("here2");
                             print_lemma(2, a, b, c);
+                            //output.puba(b + " -> (" + a + " -> " + c + ")");
                             b = cur->left->get_s();
-
                             output.puba(b + " -> (" + a + " -> " + c + ")");
-                            print_lemma(2, a, b, c);
+
+                            print_lemma(2, b, a, c);
                             flag = true;
                         }
                     }
